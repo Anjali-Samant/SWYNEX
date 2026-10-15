@@ -1,415 +1,186 @@
-# SWYNEX - UNSW-NB15 Data Preparation
+# Intelligent Network Intrusion Detection & Attack Classification
 
-## Overview
+**SWYNEX Technologies — Data Science Internship**
 
-This project focuses on preparing the UNSW-NB15 network intrusion
-detection dataset for data-science and machine-learning work.
+## 1. Project Overview
 
-It was completed as part of the SWYNEX Technologies Data Science
-Internship.
+This project explores how data science and machine learning can support network intrusion detection. Using the UNSW-NB15 dataset, the project examines network traffic characteristics and builds a baseline classifier to distinguish normal traffic from potentially malicious activity.
 
-The broader project is focused on network intrusion detection:
-using network traffic characteristics to distinguish normal network
-activity from malicious activity and, in later stages, identify
-different categories of attacks.
+The project covers the complete data-science workflow: problem definition, data preparation, exploratory data analysis (EDA), model development, evaluation, and conclusions.
 
-This repository specifically covers the **data preparation stage**.
-The dataset was inspected, validated, and documented before being
-used for subsequent exploratory analysis and machine-learning work.
+## 2. Problem Statement
 
----
+Network traffic contains information about protocols, services, connection states, packet counts, byte counts, and traffic rates. Analyzing these characteristics can help identify patterns associated with normal activity and cyberattacks.
 
-## Project Description
+The objective of this case study is to develop and evaluate a baseline machine-learning model that classifies network records as:
 
-Network traffic contains measurable characteristics such as
-protocol, service, connection state, packet counts, byte counts,
-traffic rates, timing information, and connection statistics.
+- **Normal (0):** Normal network activity
+- **Attack (1):** Network activity labeled as an attack
 
-These characteristics can be analyzed to identify patterns
-associated with normal and malicious network activity.
+The project also investigates how the findings can inform future multiclass attack classification and model improvement.
 
-The UNSW-NB15 dataset provides both normal network records and
-multiple categories of attacks, making it suitable for studying
-network intrusion detection using data-science techniques.
+## 3. Dataset
 
-The broader project can be approached as two related classification
-problems:
+The project uses the **UNSW-NB15 Network Intrusion Detection Dataset**.
 
-1. **Binary intrusion detection**
-
-   Determine whether a network record represents normal activity or
-   an attack.
-
-2. **Multiclass attack classification**
-
-   For malicious traffic, identify the category of attack.
-
-The current repository focuses on preparing and validating the data
-for these later stages.
-
----
-
-## Current Scope
-
-This repository covers the data-preparation stage of the project.
-
-The work includes:
-
-- Loading the dataset and feature-description file
-- Inspecting dataset dimensions and structure
-- Examining data types
-- Checking missing values
-- Checking duplicate records
-- Checking infinite numerical values
-- Checking negative numerical values
-- Investigating categorical variables
-- Examining target variables
-- Comparing training and testing datasets
-- Comparing dataset columns with the supplied feature documentation
-- Investigating unusual values in `is_ftp_login`
-- Evaluating the `id` column
-- Performing final data-quality validation
-- Documenting preparation decisions and assumptions
-
-Machine-learning modeling, feature encoding, model comparison, and
-deployment are outside the scope of this Task 1 repository.
-
----
-
-## Dataset
-
-The project uses the **UNSW-NB15** network intrusion detection
-dataset.
-
-The dataset contains network traffic records representing normal
-network activity and multiple categories of network attacks.
-
-### Dataset Files Used
-
+Dataset files used:
 - `UNSW_NB15_training-set.csv`
 - `UNSW_NB15_testing-set.csv`
 - `UNSW-NB15_features.csv`
 
-The dataset files themselves are not included in this repository
-because of their size.
+| Dataset | Records | Columns |
+|---|---:|---:|
+| Training | 175,341 | 45 |
+| Testing | 82,332 | 45 |
 
-### Dataset Source
-
-Official UNSW-NB15 Dataset:
-
+**Official dataset source:**  
 https://research.unsw.edu.au/projects/unsw-nb15-dataset
 
----
-
-## Project Structure
-
-```text
-SWYNEX-Data-Preparation/
-│
-├── data/
-│   └── README.md
-│
-├── notebook/
-│   └── 01_data_preparation.ipynb
-│
-├── .gitignore
-└── README.md
-Data Preparation Process
-
-The dataset was examined through the following stages:
-
-Loaded the training, testing, and feature-description files.
-Inspected dataset dimensions and column names.
-Examined Pandas data types.
-Checked for missing values.
-Checked for duplicate records.
-Checked for infinite numerical values.
-Checked for negative numerical values.
-Investigated categorical variables such as proto, service,
-and state.
-Examined the target variables label and attack_cat.
-Compared the feature documentation with the prepared dataset
-schema.
-Compared training and testing datasets for column and data-type
-consistency.
-Investigated unusual values in is_ftp_login.
-Evaluated the id column as a record identifier.
-Performed final validation of the prepared datasets.
-Key Findings
-Dataset Dimensions
-Dataset	Rows	Columns
-Training	175,341	45
-Testing	82,332	45
-Data Quality
-
-The audit found:
+The CSV files are not included in this repository. Refer to `data/README.md` for dataset information.
 
-No missing values in the training or testing data.
-No duplicate rows.
-No infinite numerical values.
-No negative numerical values.
-Matching columns between training and testing datasets.
-Matching Pandas data types between training and testing datasets.
+## 4. Data Preparation
 
-Because no missing or duplicate records were identified, no
-missing-value imputation or duplicate-row removal was required.
+The dataset preparation stage included:
 
-Extreme numerical values were also investigated. Large values were
-not automatically removed because their magnitude alone did not
-establish that they were invalid network measurements.
+- Inspecting dataset dimensions, columns, and data types.
+- Checking missing values, duplicate rows, infinite values, and negative numerical values.
+- Investigating categorical features and target distributions.
+- Comparing the training and testing schemas.
+- Comparing dataset columns against the supplied feature documentation.
+- Investigating the unusual values found in `is_ftp_login`.
+- Identifying `id` as a record identifier rather than a predictive feature.
 
-Target Variables
-label
+### Data Quality Results
 
-The label column provides a binary target:
+- Missing values: 0 in both datasets.
+- Duplicate rows: 0 in both datasets.
+- Infinite numerical values: 0 in both datasets.
+- Training and testing columns: Consistent.
+- Training and testing data types: Consistent.
 
-0 = Normal
-1 = Attack
-
-The training dataset contains:
-
-Label	Meaning	Records
-0	Normal	56,000
-1	Attack	119,341
-attack_cat
-
-The attack_cat column provides a more detailed classification of
-the network records.
-
-The training dataset contains the following categories:
-
-Attack Category	Records
-Normal	56,000
-Generic	40,000
-Exploits	33,393
-Fuzzers	18,184
-DoS	12,264
-Reconnaissance	10,491
-Analysis	2,000
-Backdoor	1,746
-Shellcode	1,133
-Worms	130
-
-The relationship between label and attack_cat was also checked.
+Column names were standardized by removing leading and trailing whitespace. No missing-value imputation or duplicate removal was necessary.
 
-In the training dataset:
-
-Normal corresponds to label = 0.
-The attack categories correspond to label = 1.
-Categorical Feature Analysis
-
-Categorical variables were investigated to understand their
-distributions and consistency between the training and testing
-datasets.
+The observed `is_ftp_login` values were retained because the available documentation did not justify an alternative recoding rule.
 
-Protocol
+## 5. Exploratory Data Analysis
 
-The proto feature contains multiple protocol categories.
+EDA was used to understand the distribution and characteristics of network traffic.
 
-The following categories were found only in the training dataset:
+The analysis included:
+- Summary statistics for numerical features.
+- Normal-versus-attack class distribution.
+- Distribution of attack categories.
+- Attack percentages across connection states.
+- Protocol-level attack patterns.
+- Numerical feature distributions and potential skewness.
+- Correlations between numerical features.
 
-icmp
-rtp
+### Key Findings
 
-No protocol categories were found only in the testing dataset.
+**1. Class distribution:** Approximately 68.1% of training records are attacks and 31.9% are normal records. Evaluation should therefore use more than accuracy alone.
 
-These categories were retained because their absence from the
-testing split does not by itself indicate invalid data.
+**2. Attack-category imbalance:** Some categories, such as Worms, contain substantially fewer records than common categories. This may make multiclass classification more challenging.
 
-Service
+**3. Connection-state patterns:** Attack percentages vary across connection states, suggesting that connection-state information may be useful for classification.
 
-The service feature contains the same set of categories in both
-training and testing datasets.
+**4. Protocol patterns:** Attack percentages differ across protocols in this dataset. These associations may provide predictive information but should not be assumed to generalize to every network.
 
-The category - is present as a value in the dataset and was
-treated as an observed category rather than automatically replacing
-it with a missing value.
+**5. Skewed numerical features:** Traffic measurements can have long-tailed distributions. Transformations and outlier handling should be evaluated carefully instead of automatically deleting extreme observations.
 
-State
+**6. Feature correlations:** Correlated numerical features may contain overlapping information and can be investigated during future feature selection.
 
-Some state categories differ between the training and testing
-datasets.
+These findings describe the dataset and do not establish that any individual feature causes an attack.
 
-Training-only categories:
+## 6. Model Development
 
-ECO
-PAR
-URN
-no
+A baseline **Random Forest Classifier** was trained for binary intrusion detection.
 
-Testing-only categories:
+### Modeling approach
 
-ACC
-CLO
+- Target variable: `label`
+- Class 0: Normal
+- Class 1: Attack
+- Features: Available network traffic attributes
+- Excluded columns: `id` and `attack_cat`
+- Categorical preprocessing: Most-frequent imputation and one-hot encoding
+- Numerical preprocessing: Median imputation
+- Classifier: Random Forest with 100 trees
+- Random state: 42
+- Class weighting: Balanced
 
-These categories were retained because a category occurring in only
-one dataset split does not by itself establish that the values are
-invalid.
+The supplied training split was used for fitting, and the supplied testing split was used for final evaluation.
 
-Feature Documentation Analysis
+The `attack_cat` column was excluded to prevent target leakage because it provides attack-category information closely related to the binary label. The identifier `id` was also excluded from model inputs.
 
-The supplied feature-description file contains 49 documented
-fields, while the prepared training and testing datasets contain
-45 columns.
+## 7. Model Evaluation
 
-Several differences are naming variations rather than missing
-values.
+The baseline model produced the following test results:
 
-Examples include:
+| Metric | Result |
+|---|---:|
+| Accuracy | 87.05% |
+| ROC-AUC | 0.9791 |
+| Attack precision | 81.67% |
+| Attack recall | 98.61% |
+| Attack F1-score | 89.34% |
+| Normal recall | 72.88% |
 
-Documentation Name	Dataset Column
-Spkts	spkts
-Dpkts	dpkts
-Sload	sload
-Dload	dload
-smeansz	smean
-dmeansz	dmean
-res_bdy_len	response_body_len
-Sintpkt	sinpkt
-Dintpkt	dinpkt
-ct_src_ ltm	ct_src_ltm
-Label	label
+### Confusion Matrix
 
-The following documented fields are not present in the prepared
-training and testing datasets used in this project:
+| Actual class | Predicted Normal | Predicted Attack |
+|---|---:|---:|
+| Normal | 26,966 | 10,034 |
+| Attack | 629 | 44,703 |
 
-srcip
-sport
-dstip
-dsport
-Stime
-Ltime
+### Interpretation
 
-These fields were not reconstructed or imputed because their values
-are not available in the selected prepared dataset files.
+The model correctly identified 44,703 attack records and missed 629 attacks. Its attack recall of 98.61% indicates that it detected most attacks in the test dataset.
 
-The differences between documentation names and dataset column names
-were documented rather than arbitrarily changing the dataset schema.
+However, 10,034 normal records were incorrectly classified as attacks. These false positives could generate excessive alerts in a practical security environment.
 
-is_ftp_login Investigation
+The results illustrate why model evaluation must consider both missed attacks and false alarms. Accuracy alone does not fully describe performance.
 
-The supplied feature documentation describes is_ftp_login as a
-binary feature.
+ROC-AUC measures discrimination across classification thresholds; it should not be interpreted as the percentage of correct predictions.
 
-However, the prepared training dataset contains the following
-values:
+## 8. Limitations
 
-0
-1
-2
-4
+- The evaluation uses one dataset and may not represent current real-world network traffic.
+- False positives could increase the workload of security analysts.
+- False negatives could allow malicious traffic to go undetected.
+- The baseline model has not been compared with alternative algorithms.
+- Further hyperparameter tuning and threshold analysis may improve the balance between detection and false alarms.
+- Additional datasets are needed to assess generalization.
+- Real-world deployment would require additional validation, monitoring, and security testing.
 
-The observed distribution was:
+## 9. Conclusion
 
-Value	Records
-0	172,774
-1	2,545
-2	6
-4	16
+This case study demonstrates an end-to-end data-science workflow for binary network intrusion detection using UNSW-NB15.
 
-The values 2 and 4 occur only in FTP records.
+The dataset was inspected and validated, exploratory analysis identified patterns relevant to modeling, and a Random Forest baseline was trained and evaluated.
 
-An additional analysis showed that is_ftp_login and ct_ftp_cmd
-have identical values across the observed training records,
-including the values 2 and 4.
+The model achieved 87.05% accuracy, a ROC-AUC of 0.9791, and 98.61% attack recall. Although the model detected most attack records in the test dataset, the number of false positives shows that further improvements are needed.
 
-Because the supplied documentation does not provide a justified
-rule for recoding the values 2 and 4, the original values were
-retained rather than being arbitrarily modified.
+Future work could include comparing alternative classifiers, tuning decision thresholds, investigating feature importance, improving false-positive performance, and evaluating the model on additional datasets.
 
-This discrepancy is documented as a data-definition inconsistency
-for consideration during later feature engineering and modeling.
+The model is a baseline for experimentation, not a production-ready intrusion detection system.
 
-Identifier Analysis
+## 10. Project Notebooks
 
-The id column contains:
+The implementation and analysis are documented in these notebooks:
 
-175,341 unique IDs
-175,341 training records
+1. **Data Preparation:** [`01_data_preparation.ipynb`](notebook/01_data_preparation.ipynb)
+2. **Exploratory Data Analysis:** [`02_exploratory_data_analysis.ipynb`](notebook/02_exploratory_data_analysis.ipynb)
+3. **Baseline Model and Evaluation:** [`03_baseline_intrusion_detection.ipynb`](notebook/03_baseline_intrusion_detection.ipynb)
 
-This indicates that id functions as a unique record identifier.
+## 11. Tools and Technologies
 
-The identifier was retained in the prepared dataset to preserve the
-original record structure.
+- Python
+- Pandas and NumPy
+- Matplotlib and Seaborn
+- Scikit-learn
+- Google Colab
+- GitHub
 
-However, id should not be treated as a predictive feature during
-subsequent machine-learning modeling because it represents record
-identity rather than network behavior.
+## 12. Internship
 
-Cleaning Decisions
-
-The analysis found that the dataset did not require extensive
-row-level cleaning.
-
-The following decisions were made:
-
-Column names were standardized by removing leading and trailing
-whitespace.
-No missing values were imputed because no missing values were
-found.
-No duplicate rows were removed because no duplicates were found.
-No infinite values were removed because none were found.
-No negative numerical values were removed because none were found.
-Rare categorical values were retained.
-Extreme numerical values were retained because their magnitude
-alone did not establish that they were invalid.
-Dataset/documentation naming differences were documented.
-The is_ftp_login inconsistency was investigated and retained
-without arbitrary recoding.
-id was identified as a record identifier rather than a
-predictive feature.
-Final Validation
-
-After preparation, the datasets were validated again.
-
-Training shape: (175341, 45)
-Testing shape : (82332, 45)
-
-Missing values:
-Training: 0
-Testing : 0
-
-Duplicate rows:
-Training: 0
-Testing : 0
-
-Infinite values:
-Training: 0
-Testing : 0
-
-Columns identical: True
-Data types identical: True
-
-The final validation confirmed that the prepared training and
-testing datasets retained their expected structure and did not
-contain the checked data-quality issues.
-
-Tools Used
-Python
-Pandas
-NumPy
-Matplotlib
-Seaborn
-Google Colab
-GitHub
-Notebook
-
-The complete data-preparation analysis is available in:
-
-notebook/01_data_preparation.ipynb
-Future Work
-
-The prepared dataset provides a foundation for subsequent
-cybersecurity data-science work, including:
-
-Exploratory data analysis
-Network traffic pattern analysis
-Binary intrusion detection
-Multiclass attack classification
-Feature analysis
-Machine-learning model development
-Model evaluation
-Development of a network intrusion detection application
-
-These activities are outside the scope of the current Task 1 data
-preparation repository.
+Completed as part of the **Data Science Internship at SWYNEX Technologies**.
